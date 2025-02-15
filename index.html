@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>replit</title>
+    <link rel="stylesheet"
+          href="https://unpkg.com/sakura.css/css/sakura.css"
+          media="screen" />
+    <link rel="stylesheet"
+          href="https://unpkg.com/sakura.css/css/sakura-dark.css"
+          media="screen and (prefers-color-scheme: dark)" />
+    <style>
+      th.asc::after {
+        content: " ▲";
+      }
+      th.desc::after {
+        content: " ▼";
+      }
+    </style>
+  </head>
+  <body>
+    <table id="table">
+      <thead>
+      <tr>
+        <th>Parent</th>
+        <th>Child</th>
+        <th>Grand Child</th>
+        <th>Great Grand Child</th>
+        <th>Great Great Grand Child</th>
+      </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    <script type="module" src="script.js"></script>
+    <script>
+      function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0, groupedRows;
+        table = document.getElementById("table");
+        switching = true;
+        dir = "asc"; // Set the sorting direction to ascending
+
+        while (switching) {
+          switching = false;
+          rows = Array.from(table.rows).slice(1); // Convert HTMLCollection to Array and exclude header row
+
+          groupedRows = rows.reduce((acc, row) => {
+            var key = Array.from(row.cells).slice(0, n).map(cell => cell.innerHTML).join('|');
+            console.log(key)
+            if (!acc[key]) acc[key] = [];
+            acc[key].push(row);
+            return acc;
+          }, {});
+          var sortedRows = Object.values(groupedRows).flatMap(group => {
+            var sortedGroup = group.slice(1).sort((a, b) => {
+              var x = a.cells[n].innerHTML
+              var y = b.cells[n].innerHTML
+              if (dir == "asc") return x > y ? 1 : x < y ? -1 : 0;
+              else return x < y ? 1 : x > y ? -1 : 0;
+            });
+            return [group[0], ...sortedGroup];
+          });
+          sortedRows.forEach((row, index) => table.tBodies[0].appendChild(row));
+          switchcount++;
+          if (switchcount == 1 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
