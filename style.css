@@ -1,0 +1,12 @@
+th {
+  user-select: none;
+  cursor: pointer;
+
+  &.asc::after {
+    content: " ▲";
+  }
+
+  &.desc::after {
+    content: " ▼";
+  }
+}
